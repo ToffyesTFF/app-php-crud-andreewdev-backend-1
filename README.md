@@ -5,4 +5,5 @@ dsadsadsdsa xddsacsadds   fdsafdsadsadsadsadsfdgwsafdbkjhdsagdjsahdkjsahdjhsjdhs
 
 
 
-xzdsadadsa sus ![Uploading amogus.gif…]()
+xzdsadadsa sus 
+![amogus](https://github.com/user-attachments/assets/ef212749-5a65-4851-9f00-eba601360928)
