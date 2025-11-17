@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     if ($usuario && $password == $usuario['password']) {
 
         $_SESSION['id_usuario'] = $usuario['id_usuario'];
-        $_SESSION['nombre'] = 'Andree Contreras';
+        //$_SESSION['nombre'] = 'Andree Contreras';
         $_ROL['rol'] = $usuario['rol'];
 
 
@@ -66,7 +66,10 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 
         <button type="submit" class="btn btn-outline-success btn-lg" >INGRESAR</button>
     </div>
-    
+    <div style="text-align: center; margin-top: 15px;">
+        <p>¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a></p>
+    </div>
+
 </form>
 
 
