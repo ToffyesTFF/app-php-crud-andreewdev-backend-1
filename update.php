@@ -124,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 
 </form>
 
-<img src="img/4" alt="">
+<img src="img/4.webp" alt="">
 
 <?php
 include 'includes/footer.php';
