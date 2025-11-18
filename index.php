@@ -13,13 +13,13 @@ $stmt = $pdo->query("SELECT
                 p.precio,
                 p.stock
             FROM
-                productos p
+                productos p 
             INNER JOIN
                 categorias c ON p.id_categoria = c.id_categoria
             INNER JOIN
                 marcas m ON p.id_marca = m.id_marca
             ORDER BY
-                p.id_producto ASC
+                p.fecha_creacion DESC
 ");
 $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

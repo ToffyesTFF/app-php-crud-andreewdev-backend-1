@@ -2,25 +2,26 @@
 session_start();
 require 'config/db.php';
 require 'includes/funciones.php';
-include 'includes/header.php';
-
-
+include 'includes/header.php'; // Incluye el header para mostrar SweetAlert
 
 if ($_SERVER["REQUEST_METHOD"] === 'POST') {
-    $correo = $_POST["correo"];
-    $password = $_POST["password"];
+    $correo = $_POST["correo"] ?? '';
+    $password_ingresada = $_POST["password"] ?? '';
 
-    //var_dump($correo, $password);
-    $stmt = $pdo->prepare("SELECT * FROM USUARIOS WHERE usuario = ?");
+    // 1. Buscar al usuario, SELECCIONANDO el campo 'nombre'
+    // Asegúrate de incluir todas las columnas que necesitas para la sesión
+    $stmt = $pdo->prepare("SELECT id_usuario, password, rol, nombre FROM USUARIOS WHERE usuario = ?");
     $stmt->execute([$correo]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($usuario && $password == $usuario['password']) {
-
+    // 2. Verificar el usuario Y la contraseña hasheada
+    if ($usuario && password_verify($password_ingresada, $usuario['password'])) { 
+        
+        // Contraseña correcta: Guardar los datos del usuario en la sesión
         $_SESSION['id_usuario'] = $usuario['id_usuario'];
-        //$_SESSION['nombre'] = 'Andree Contreras';
-        $_ROL['rol'] = $usuario['rol'];
-
+        $_SESSION['rol'] = $usuario['rol'];
+        // 🚨 CAMBIO CLAVE: Guardamos el nombre recuperado de la DB
+        $_SESSION['nombre'] = $usuario['nombre']; 
 
         echo "
         <script>
@@ -33,11 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         ";
 
     } else {
+        // Usuario no encontrado o contraseña incorrecta
         echo "
         <script>
         Swal.fire({
             title: 'Usuario o contraseña incorrecta ☂️☂️☂️',
-            // Usa el mensaje de error escapado
             text: 'Vuelve a intentarlo', 
             icon: 'error'
         }).then(() => window.location='login.php');
@@ -55,15 +56,14 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 <form method="POST">
     <div class="mb-3">
         <label for="correo" class="form-label">Correo</label>
-        <input type="email" class="form-control" id="correo" name="correo">
+        <input type="email" class="form-control" id="correo" name="correo" required>
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
-        <input type="password" class="form-control" id="password" name="password">
+        <input type="password" class="form-control" id="password" name="password" required>
     </div>
 
     <div style="text-align: center;">
-
         <button type="submit" class="btn btn-outline-success btn-lg" >INGRESAR</button>
     </div>
     <div style="text-align: center; margin-top: 15px;">
@@ -71,8 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     </div>
 
 </form>
-
-
 
 <?php
 include 'includes/footer.php';

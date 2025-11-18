@@ -1,27 +1,30 @@
 <?php
+
 require 'config/db.php';
 require 'includes/funciones.php';
 include 'includes/header.php';
 
+$creado_por_id = $_SESSION['id_usuario']; 
 $categorias = obtenerCategoria($pdo);
 $marcas= obtenerMarca($pdo);
 
 
-
 if ($_SERVER["REQUEST_METHOD"] === 'POST') {
-    ///Los espacios tambien cuentan como caracteres XD
-    $nombre = $_POST["nombre"]; //trabaja con el "name"
+    
+    $nombre = $_POST["nombre"]; 
     $descripcion = $_POST["descripcion"];
     $precio = $_POST["precio"];
     $stock = $_POST["stock"];
     $categoria = $_POST["id_categoria"];
     $marca = $_POST["id_marca"];
+    
+    
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO PRODUCTOS (nombre, descripcion, precio, stock, id_categoria, id_marca) 
-        VALUES (?,?,?,?,?,?)");
+        $stmt = $pdo->prepare("INSERT INTO PRODUCTOS (nombre, descripcion, precio, stock, id_categoria, id_marca, creado_por) 
+        VALUES (?,?,?,?,?,?,?)");
 
-        $stmt->execute([$nombre, $descripcion, $precio, $stock, $categoria, $marca]);
+       $stmt->execute([$nombre, $descripcion, $precio, $stock, $categoria, $marca, $creado_por_id]);
 
         echo "
         <script>
@@ -46,17 +49,9 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         
         ";
     }
-
-
-
-    //echo 
-    //var_dump y die, dd
-    //var_dump($nombre,$precio,$descripcion,$stock);
-    //header("Location:index.php");
+    
     exit;
 }
-
-
 
 ?>
 
@@ -104,6 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     </div>
     
     
+    
 
     <button type="submit" class="btn btn-outline-info">GUARDAR</button>
 </form>
@@ -111,7 +107,4 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 
 <?php
 include 'includes/footer.php';
-
-
-
 ?>

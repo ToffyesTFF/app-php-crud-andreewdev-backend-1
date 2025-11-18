@@ -1,20 +1,16 @@
 <?php
 session_start();
-// Incluir la conexión a la base de datos
 require 'config/db.php';
 require 'includes/funciones.php'; 
 include 'includes/header.php';
 
-// --- PROCESAMIENTO DEL FORMULARIO DE REGISTRO ---
 if ($_SERVER["REQUEST_METHOD"] === 'POST') {
-    // 1. Obtener los datos
     $correo = $_POST["correo"] ?? '';
-    $password = $_POST["password"] ?? ''; 
-    // Usamos 'empleado' como rol por defecto, basándonos en tu ejemplo
-    $rol_default = 'usuario nuevo'; 
+    $password_plano = $_POST["password"] ?? '';
+    $rol_default = 'usuario'; 
+    $nombre_ = $_POST["nombre"] ?? '';
 
-    // 2. Validar campos obligatorios
-    if (empty($correo) || empty($password)) {
+    if (empty($correo) || empty($password_plano)) {
         echo "<script>
             Swal.fire({
                 title: 'Error de registro',
@@ -24,7 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         </script>";
     } else {
         
-        // 3. Verificar si el usuario/correo ya existe
+        $password_hashed = password_hash($password_plano, PASSWORD_DEFAULT); 
+
         $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM USUARIOS WHERE usuario = ?");
         $stmt_check->execute([$correo]);
         $existe = $stmt_check->fetchColumn();
@@ -38,12 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
                 }).then(() => window.location='register.php');
             </script>";
         } else {
-            // 4. Insertar el nuevo usuario
-            // Insertamos solo en las columnas 'usuario', 'password', y 'rol'
-            $stmt_insert = $pdo->prepare("INSERT INTO USUARIOS (usuario, password, rol) VALUES (?, ?, ?)");
+            $stmt_insert = $pdo->prepare("INSERT INTO USUARIOS (usuario, password, rol, nombre) VALUES (?, ?, ?, ?)");
             
-            // Los valores pasados son: correo (para 'usuario'), password, y el rol por defecto
-            $resultado = $stmt_insert->execute([$correo, $password, $rol_default]);
+            $resultado = $stmt_insert->execute([$correo, $password_hashed, $rol_default, $nombre_]);
 
             if ($resultado) {
                 echo "<script>
@@ -71,6 +65,10 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 <br>
 
 <form method="POST">
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
     <div class="mb-3">
         <label for="correo" class="form-label">Correo</label>
         <input type="email" class="form-control" id="correo" name="correo" required>
