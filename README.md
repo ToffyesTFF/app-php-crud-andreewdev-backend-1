@@ -16,4 +16,5 @@ AMOGUS (v 2)
 ![bochi](https://github.com/user-attachments/assets/718e420d-0716-4795-9b42-5c9ef9b22045)
 
 18/11/2025 -> Martes (v 4) version final y mas bonita wiii
+------------------
 ![komi-san](https://github.com/user-attachments/assets/78efa1e2-f085-44d3-a80a-f11f30394361)
